@@ -20,6 +20,13 @@ Task("Deploy")
     .IsDependentOn("Publish")
     .Does(() =>
     {
+        var dir = "deploy";
+        if (!DirectoryExists(dir))        {
+            CreateDirectory(dir);
+        }else{
+            CleanDirectory(dir);
+        }
+
         var deployZip = "./deploy/deploypackage.zip";
         Zip("./publish", deployZip , "./publish/**/*");
         var siteName = "smack-smarteboka-com";
