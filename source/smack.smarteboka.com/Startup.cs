@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IdentityModel.Tokens.Jwt;
 
+using Common.Publishers.Slack;
+
 namespace smack.smarteboka.com
 {
     public class Startup
@@ -41,7 +43,12 @@ namespace smack.smarteboka.com
 
                     options.ClientId = "Smack";
                     options.SaveTokens = true;
-                });            
+                });
+            services.AddOptions();
+            
+            services.Configure<SlackOptions>(Configuration);  
+            services.AddSingleton<SlackPublisher>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -291,4 +291,4 @@ tools/
 artifacts/
 deploy/
 
-appsettings.production.json
+appsettings.Production.json
