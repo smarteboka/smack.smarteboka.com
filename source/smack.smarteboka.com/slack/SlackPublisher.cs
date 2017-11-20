@@ -1,11 +1,11 @@
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
+using smack.smarteboka.com.Models;
 
 namespace Common.Publishers.Slack
 {
@@ -13,7 +13,7 @@ namespace Common.Publishers.Slack
     {
         private readonly Uri _uri; 
         private static readonly HttpClient HttpClient = new HttpClient();
-        private ILogger<SlackPublisher> _logger;
+        private readonly ILogger<SlackPublisher> _logger;
 
 
         public SlackPublisher(IOptions<SlackOptions> slackOptions, ILogger<SlackPublisher> logger)
@@ -22,37 +22,16 @@ namespace Common.Publishers.Slack
             _logger = logger;
         }
 
-        public async Task PostMessage(string username, string emoji, string message, string channel, string color = null, Link includeLink = null, SubSection[] subSections = null)
+        public async Task PostMessage(SlackModel model)
         {
             var payload = new SlackPayload
             {
-                Channel = channel,
-                Username = username,
-                Emojii = emoji,
-                mrkdwn = true
+                Channel = model.Channel,
+                Username = model.Username,
+                Emojii = model.Emoji,
+                mrkdwn = true,
+                Text = model.Message,
             };
-
-            if (subSections == null)
-            {
-                var slackAttachment = new SlackAttachment
-                {
-                    text = message,
-                    color = color
-                };
-
-                if (includeLink != null)
-                {
-                    slackAttachment.title = includeLink.Title;
-                    slackAttachment.title_link = includeLink.Url;
-                }
-                
-                payload.Attachments = new[] { slackAttachment };
-            }
-            else
-            {
-                payload.Text = message;
-                payload.Attachments = subSections.Select(s => new SlackAttachment { text = s.Text, color = s.Color }).ToArray(); ;
-            }
 
             await PostMessage(payload);
         }

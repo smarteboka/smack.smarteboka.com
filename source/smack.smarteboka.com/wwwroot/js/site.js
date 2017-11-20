@@ -1,1 +1,1 @@
-﻿// Write your JavaScript code.
+﻿document.getElementById("Message").focus();

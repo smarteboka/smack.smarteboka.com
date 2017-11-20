@@ -20,12 +20,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+    
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">smack.smarteboka.com</a>
             @if (User.Identity.IsAuthenticated)
             {
@@ -42,22 +37,46 @@
                 </ul>
             }                 
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
-            </div>
         </div>
     </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2017 - smack.smarteboka.com</p>
-        </footer>
-    </div>
+<div class="container body-content">
+    @if (TempData.ContainsKey("success_message"))
+    {
+        <div class="topmargin15"></div>
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>OK!</strong> @DateTime.Now.ToLocalTime() :  @TempData["success_message"]
+        </div>
+    }
+
+    @if (TempData.ContainsKey("info_message"))
+    {
+        <div class="topmargin15"></div>
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Info</strong> @DateTime.Now.ToLocalTime() :  @TempData["info_message"]
+        </div>
+    }
+
+    @if (TempData.ContainsKey("error_message"))
+    {
+        <div class="topmargin15"></div>
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> @DateTime.Now.ToLocalTime() : @TempData["error_message"]
+        </div>
+    }
+    
+    @if (!TempData.ContainsKey("success_message") && !TempData.ContainsKey("info_message") && !TempData.ContainsKey("error_message"))
+    {
+        <div class="topmargin15"></div>
+    }    
+    @RenderBody()
+    <hr/>
+    <footer>
+        <p>&copy; 2017 - smack.smarteboka.com</p>
+    </footer>
+</div>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
