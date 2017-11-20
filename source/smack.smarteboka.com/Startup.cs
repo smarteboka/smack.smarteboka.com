@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace smack.smarteboka.com
 {
@@ -22,6 +23,25 @@ namespace smack.smarteboka.com
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = "Cookies";
+                    options.DefaultChallengeScheme = "oidc";
+                })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.SignInScheme = "Cookies";
+
+                    options.Authority = "http://id.smarteboka.com";                    
+
+                    options.RequireHttpsMetadata = false;
+
+                    options.ClientId = "Smack";
+                    options.SaveTokens = true;
+                });            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,8 +56,8 @@ namespace smack.smarteboka.com
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
-
+            app.UseAuthentication();
+            app.UseStaticFiles();            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

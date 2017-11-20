@@ -27,6 +27,20 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">smack.smarteboka.com</a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        @{
+                            var name = User.GetName() ?? "No-name";
+                        }
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@name <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-action="Logout" asp-controller="Account">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            }                 
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
